@@ -81,7 +81,7 @@ module move_to_earn::streak_rewards {
         } else {
             // A duplicate or out-of-order check‑in.
             assert!(false, 1);
-        }
+        };
         record.last_check_in = current_day;
     }
 
@@ -95,7 +95,8 @@ module move_to_earn::streak_rewards {
         if (record.streak > 0 && record.streak % REQUIRED_STREAK == 0) {
             let pool_balance = sui::coin::value(&pool.balance);
             assert!(pool_balance >= REWARD_AMOUNT, 2);
-            let reward = sui::coin::extract(&mut pool.balance, REWARD_AMOUNT);
+            // let reward = sui::coin::extract(&mut pool.balance, REWARD_AMOUNT);
+             let reward = coin::split(&mut pool.balance, REWARD_AMOUNT, ctx);
             transfer::public_transfer(reward, ctx.sender());
         }
     }
